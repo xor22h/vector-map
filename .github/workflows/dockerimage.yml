@@ -9,6 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Log in to registry
+      uses: actions/docker/login@master
+      env:
+        DOCKER_REGISTRY_URL: docker.pkg.github.com
+        DOCKER_USERNAME: ${{ github.actor }}
+        DOCKER_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+      if: github.event_name == 'push'
     - uses: actions/checkout@v1
     - name: Build custom Tegola image
-      run: docker build . --file Dockerfile.tegola --tag docker.pkg.github.com/xor22h/vector-map/tegola:$(date +%s)
+      run: docker build . --file Dockerfile.tegola --tag docker.pkg.github.com/${{ github.repository}}/tegola:$(date +%s)
